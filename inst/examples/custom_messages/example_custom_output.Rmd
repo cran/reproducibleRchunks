@@ -1,0 +1,43 @@
+---
+title: "Example for custom reproducibility summaries"
+output:
+  pdf_document: default
+date: "2024-07-01"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+if (requireNamespace("reproducibleRchunks",quietly=TRUE)) {
+  library("reproducibleRchunks")
+} else {
+  
+}
+
+options(reproducibleRchunks.templates = list(
+     # latex="\\hrulefill \n \\section{${title}} 
+    #  \\medskip \\small 
+    #  ${content}\n \\hrulefill \n
+    #  ")
+  latex="\\marginpar{${content}}"
+    ))
+```
+
+# Linear Model
+
+Using the `pressure` data set (vapor pressure of mercury as a function of temperature), we ran a simple regression model with temperature predicting pressure.
+
+```{reproducibleR pressure, echo=FALSE}
+model <- lm(pressure~temperature, pressure)
+```
+We found the following model coefficients:
+
+```{reproducibleR pressuretidy, echo=TRUE}
+result <- broom::tidy(model)
+
+knitr::kable(result)
+```
+
+```{r}
+knitr::kable(result)
+```

@@ -1,0 +1,45 @@
+---
+title: "Demonstration of reproducibleR chunks"
+output:
+  html_document: default
+  pdf_document: default
+date: "2024-06-05"
+author: "Andreas M. Brandmaier"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(reproducibleRchunks)
+x <- 11
+
+#options(reproducibleRchunks.templates =  list(html = "<div style='border: 3px solid red; padding: 10px 10px 10px 10px; background-color: #EEEEEE;'><h1>${title}</h1>${content}</div>"))
+```
+
+## Some Computation
+
+Here is a computation:
+
+```{reproducibleR addition}
+cat("123")
+a<-1
+b<-2
+a+b
+456
+```
+
+Here is another computation, which will most likely not reproduce because the random number generator will start in different states every time:
+
+```{R failureToReplicate}
+rnd <- rnorm(10)
+```
+
+
+## Summary
+
+The following table summarizes reproducibility information collected in this document:
+
+```{r}
+knitr::kable(
+  reproducibleRchunks::get_reproducibility_summary()
+)
+```
