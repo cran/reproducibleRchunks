@@ -357,36 +357,14 @@ display: none;
 </div>
 
 
+<p>Here is a code snippet to override the package functionality and
+render all chunks as regular R chunks. This is useful if the package is
+not available:</p>
+<pre class="r"><code>knitr::knit_engines$set(reproducibleR = knitr::knit_engines$get(&quot;R&quot;))</code></pre>
 <div id="some-computation" class="section level2">
 <h2>Some Computation</h2>
 <p>Here is a computation:</p>
-<pre class="r"><code>cat(&quot;123&quot;)
-a&lt;-1
-b&lt;-2
-a+b
-456</code></pre>
-<pre><code>## 123</code></pre>
-<div style="border: 3px solid black; padding: 10px 10px 10px 10px; background-color: #EEEEEE;">
-<h5>
-Code Chunk Reproduction Report
-</h5>
-<p>⚠ Warning: Current code chunk fingerprint and stored code chunk
-fingerprint mismatch. Likely, the code chunk was modified after
-reproduction data was stored the first time.</p>
-[x] Reproduction error! Variable my_sum was not defined in this chunk!
-</div>
-<p>Here is another computation, which will most likely not reproduce
-because the random number generator will start in different states every
-time:</p>
-<pre class="r"><code>rnd &lt;- rnorm(10)</code></pre>
-</div>
-<div id="summary" class="section level2">
-<h2>Summary</h2>
-<p>The following table summarizes reproducibility information collected
-in this document:</p>
-<pre class="r"><code>knitr::kable(
-  reproducibleRchunks::get_reproducibility_summary()
-)</code></pre>
+<pre class="reproducibler"><code>my_sum &lt;- 12</code></pre>
 </div>
 
 
