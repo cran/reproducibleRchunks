@@ -11,12 +11,26 @@ date: "2024-05-31"
 The following computations will be automatically tested for reproducibility with every build of this document.
 
 
-```r
+``` r
 xyz <- 1:10
 abc <- "hello world"
 some_obj <- t.test(xyz)
+some_obj
 ```
 
+```
+## 
+## 	One Sample t-test
+## 
+## data:  xyz
+## t = 5.7446, df = 9, p-value = 0.0002782
+## alternative hypothesis: true mean is not equal to 0
+## 95 percent confidence interval:
+##  3.334149 7.665851
+## sample estimates:
+## mean of x 
+##       5.5
+```
 ### Code Chunk Reproduction Report
 **Creating reproduction file**
  This seems to be the first run of the R Markdown file including reproducible chunks.
@@ -25,3 +39,28 @@ Storing reproducibility information for variables:
 - abc
 - some_obj
 - xyz
+
+
+# regular R
+
+
+``` r
+xyz <- 1:10
+abc <- "hello world"
+some_obj <- t.test(xyz)
+some_obj
+```
+
+```
+## 
+## 	One Sample t-test
+## 
+## data:  xyz
+## t = 5.7446, df = 9, p-value = 0.0002782
+## alternative hypothesis: true mean is not equal to 0
+## 95 percent confidence interval:
+##  3.334149 7.665851
+## sample estimates:
+## mean of x 
+##       5.5
+```

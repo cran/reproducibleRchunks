@@ -6,7 +6,8 @@
   [![Lifecycle: stable](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable)
   <!-- badges: end -->
 
-Preprint available on PsyArXiV: [https://osf.io/preprints/psyarxiv/3zjvf](https://osf.io/preprints/psyarxiv/3zjvf)
+Also read our Open Access publication about this package in _Collabra: Psychology_:
+[Automated Reproducibility Testing in R Markdown](https://doi.org/10.1525/collabra.138638)
 
 ## Why should I care?
 
@@ -15,6 +16,14 @@ This package allows you to make computational results in R testable for reproduc
 ![](inst/img/rstudio-screenshot-marker2.png)
 
 ## Installation
+
+To install the package from CRAN, enter:
+
+```
+install.packages("reproducibleRchunks")
+```
+
+Or, install the latest developers' version:
 
 ```
 devtools::install_github("brandmaier/reproducibleRchunks")
@@ -73,11 +82,29 @@ Virtually any kind of variable can be subjected to a reproducibility test by def
 
 ![](inst/img/rstudio-screenshot-marker.png)
 
+## Chunk Options
+
+The package uses the standard rendering facilities of the `knitr` package and thus
+supports all standard code chunk options known from R Markdown documents, such as:
+- `echo`: show or hide the R code in the output
+- `eval`: evaluate the R code
+- `include`: FALSE hides both the code and the output
+- `message`: Show or hide messages
+- `warning`: Show or hide warnings
+- `error`: Show or hide errors
+
+Further typical chunk options control output and formatting options (e.g., `fig.width` or `fig.height`).
+
 ## Notes
 
 Do not store critical and/or large data as raw data in reproducibleR chunks. In particular, do not store raw data (too large and possible breach of data protection laws, privacy issues), passwords (security risk as they would be stored in clear text), etc.
 Do not subject results from current date or current time functions as they are supposed to change over replications.
 Make sure to use random seeds if your analysis is based on random numbers and note that results from the default random number generator may vary between R versions.
+
+## Trouble-Shooting
+
+- Some variables that I use in my code chunk are not tested for reproducibility. Answer: Not all variables are subject to reproducibility checks but only those newly declared within a code chunk. This is a deliberate design decision.
+
 
 ## License
 
