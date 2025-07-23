@@ -1,3 +1,12 @@
+# reproducibleRchunks 1.2.0
+
+* features new use_github_action() for automated reproducibility checks on github with automatic inference of used packages for container setup; this action supports the use of renv projects
+* metadata now stores information about R packages used
+* customization of failure and success message is now possible
+* storage of sessionInfo() in metadata
+* reset() function to delete all metadata files
+* new vignette explaining how to use renv and the package together
+
 # reproducibleRchunks 1.1.0
 
 * Rewrite of the internal evaluation and formatting engine to relay most of the heavy

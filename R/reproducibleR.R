@@ -223,7 +223,7 @@ reproducibleR <- function(options) {
           paste0("- ",
                  ok_symbol(output_format),
                  var,
-                 ": REPRODUCTION SUCCESSFUL")
+                 default_msg_success())
         cur_attempt_successful <- TRUE
       } else {
         err_counter = err_counter + 1
@@ -247,7 +247,7 @@ reproducibleR <- function(options) {
           # generate more informative error message for numeric values
           if (is.numeric(original_value) &&
               is.numeric(current_value))         {
-            if (length(original_value) == 1 && length(current_value == 1)) {
+            if (length(original_value) == 1 && length(current_value) == 1) {
               errmsg <-
                 paste0(
                   "Numbers are not identical: ",
@@ -279,7 +279,7 @@ reproducibleR <- function(options) {
           paste0("- ",
                  fail_symbol(output_format),
                  var,
-                 ": **REPRODUCTION FAILED** ",
+                 default_msg_failure(),
                  errmsg)
       }
       output <- c(output, result, "\n")

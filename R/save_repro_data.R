@@ -1,26 +1,3 @@
-default_filetype <-
-  function()
-    getOption("reproducibleRchunks.filetype", "json")
-default_digits <-
-  function()
-    getOption("reproducibleRchunks.digits", 10)
-default_hashing <-
-  function()
-    getOption("reproducibleRchunks.hashing", TRUE)
-default_hashing_algorithm <-
-  function()
-    getOption("reproducibleRchunks.hashing_algorithm", "sha256")
-default_prefix <-
-  function()
-    getOption("reproducibleRchunks.prefix", ".repro")
-default_templates <-
-  function()
-    getOption(
-      "reproducibleRchunks.templates",
-      list(html = "<div style='border: 3px solid black; padding: 10px 10px 10px 10px; background-color: #EEEEEE;'><h5>${title}</h5>${content}</div>",
-           latex = "\\hrulefill \n \\section{${title}} \\medskip \\small  ${content}\n \\hrulefill \n")
-    )
-
 #' @title Storing reproducibility data
 #' @param x Object to be stored.
 #' @param filename Name (possible including full path) of the save file
@@ -83,7 +60,9 @@ save_repro_data <- function(x,
         hashing_package = "digest",
         hashing_package_version = utils::packageVersion("digest"),
         digits = default_digits(),
-        R_version = base::R.version
+        R_version = base::R.version,
+        packages = sapply(utils::sessionInfo()$otherPkgs, function(x) {x$Package})
+        #session_info = sessionInfo()
       ),
       data = named_list
     )
@@ -113,5 +92,5 @@ save_repro_data <- function(x,
     stop("Unknown filetype. Cannot save reproducibility data.")
   }
 
-  return()
+  invisible()
 }

@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<meta name="author" content="Andreas Brandmaier" />
+
+<meta name="date" content="2025-07-23" />
+
+<title>Custom Reports</title>
+
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
+
+<style type="text/css">
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+</style>
+
+
+
+<style type="text/css">
+code {
+white-space: pre;
+}
+.sourceCode {
+overflow: visible;
+}
+</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+{ counter-reset: source-line 0; }
+pre.numberSource code > span
+{ position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+{ content: counter(source-line);
+position: relative; left: -1em; text-align: right; vertical-align: baseline;
+border: none; display: inline-block;
+-webkit-touch-callout: none; -webkit-user-select: none;
+-khtml-user-select: none; -moz-user-select: none;
+-ms-user-select: none; user-select: none;
+padding: 0 4px; width: 4em;
+color: #aaaaaa;
+}
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; padding-left: 4px; }
+div.sourceCode
+{ }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } 
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.at { color: #7d9029; } 
+code span.bn { color: #40a070; } 
+code span.bu { color: #008000; } 
+code span.cf { color: #007020; font-weight: bold; } 
+code span.ch { color: #4070a0; } 
+code span.cn { color: #880000; } 
+code span.co { color: #60a0b0; font-style: italic; } 
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.do { color: #ba2121; font-style: italic; } 
+code span.dt { color: #902000; } 
+code span.dv { color: #40a070; } 
+code span.er { color: #ff0000; font-weight: bold; } 
+code span.ex { } 
+code span.fl { color: #40a070; } 
+code span.fu { color: #06287e; } 
+code span.im { color: #008000; font-weight: bold; } 
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.kw { color: #007020; font-weight: bold; } 
+code span.op { color: #666666; } 
+code span.ot { color: #007020; } 
+code span.pp { color: #bc7a00; } 
+code span.sc { color: #4070a0; } 
+code span.ss { color: #bb6688; } 
+code span.st { color: #4070a0; } 
+code span.va { color: #19177c; } 
+code span.vs { color: #4070a0; } 
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } 
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Custom Reports</h1>
+<h4 class="author">Andreas Brandmaier</h4>
+<h4 class="date">2025-07-23</h4>
+
+
+
+<p>Here, I demonstrate how custom reports about the success of
+reproduction of a document can be generated within a markdown document.
+To illustrate, we first create three chunks using the code chunk type
+<code>reproducibleR</code> of which the first two reproduce just fine
+while not all variables of the third chunk reproduce. Finally, we
+generate custom reports.</p>
+<div id="styling-of-chunk-level-reports" class="section level1">
+<h1>Styling of chunk-level reports</h1>
+<p>The following code defines a new format for the chunk-level reports
+based on HTML/CSS. We draw a thin dashed line as border and fill the box
+with a light gray color. Last, we change the title.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">options</span>(<span class="at">reproducibleRchunks.templates =</span> <span class="fu">list</span>(</span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a><span class="at">html=</span><span class="st">&quot;&lt;div style=&#39;border: 1px dashed gray;</span></span>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a><span class="st">padding: 15px 15px 5px 15px;</span></span>
+<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a><span class="st">background-color: #F7F7F7;&#39;&gt;</span></span>
+<span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a><span class="st">&lt;small&gt;&lt;b&gt;Reproducibility Checks&lt;/b&gt;&lt;br&gt;</span></span>
+<span id="cb1-6"><a href="#cb1-6" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" tabindex="-1"></a><span class="st">${content}&lt;/small&gt;&lt;/div&gt;&lt;br&gt;&lt;br&gt;&quot;</span>))</span></code></pre></div>
+<p>Next, we define some <code>reproducibleR</code> chunks of which some
+contain reproducible and some non-reproducible parts.</p>
+</div>
+<div id="cereals" class="section level1">
+<h1>Cereals</h1>
+<p>In this first example we work with the <code>UScereal</code> data set
+from the <code>MASS</code> package. The chunk loads the data, runs an
+analysis of variance on calorie content by manufacturer and prints the
+summary of the model.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a>cereal_data <span class="ot">&lt;-</span> MASS<span class="sc">::</span>UScereal</span>
+<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a>model <span class="ot">&lt;-</span> <span class="fu">anova</span>(<span class="fu">lm</span>(calories<span class="sc">~</span>mfr, cereal_data))</span>
+<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a><span class="fu">summary</span>(model)</span>
+<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a><span class="co">#&gt;        Df           Sum Sq          Mean Sq        F value         Pr(&gt;F)      </span></span>
+<span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a><span class="co">#&gt;  Min.   : 5.0   Min.   : 25769   Min.   :3789   Min.   :1.36   Min.   :0.2523  </span></span>
+<span id="cb2-6"><a href="#cb2-6" tabindex="-1"></a><span class="co">#&gt;  1st Qu.:18.5   1st Qu.: 75208   1st Qu.:4130   1st Qu.:1.36   1st Qu.:0.2523  </span></span>
+<span id="cb2-7"><a href="#cb2-7" tabindex="-1"></a><span class="co">#&gt;  Median :32.0   Median :124648   Median :4471   Median :1.36   Median :0.2523  </span></span>
+<span id="cb2-8"><a href="#cb2-8" tabindex="-1"></a><span class="co">#&gt;  Mean   :32.0   Mean   :124648   Mean   :4471   Mean   :1.36   Mean   :0.2523  </span></span>
+<span id="cb2-9"><a href="#cb2-9" tabindex="-1"></a><span class="co">#&gt;  3rd Qu.:45.5   3rd Qu.:174087   3rd Qu.:4812   3rd Qu.:1.36   3rd Qu.:0.2523  </span></span>
+<span id="cb2-10"><a href="#cb2-10" tabindex="-1"></a><span class="co">#&gt;  Max.   :59.0   Max.   :223527   Max.   :5154   Max.   :1.36   Max.   :0.2523  </span></span>
+<span id="cb2-11"><a href="#cb2-11" tabindex="-1"></a><span class="co">#&gt;                                                 NA&#39;s   :1      NA&#39;s   :1</span></span></code></pre></div>
+<div style="border: 1px dashed gray;
+padding: 15px 15px 5px 15px;
+background-color: #F7F7F7;">
+<p><small><b>Reproducibility Checks</b><br></p>
+<ul>
+<li><p>✅cereal_data: REPRODUCTION SUCCESSFUL</p></li>
+<li><p>✅model: REPRODUCTION SUCCESSFUL</p></li>
+</ul>
+</small>
+</div>
+<p><br><br></p>
+</div>
+<div id="linear-model" class="section level1">
+<h1>Linear Model</h1>
+<p>The next chunk demonstrates a simple linear regression. We use the
+<code>Animals</code> data from <code>MASS</code> to predict brain weight
+from body weight and print the model summary.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a>animals <span class="ot">&lt;-</span> MASS<span class="sc">::</span>Animals</span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a>model2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(brain<span class="sc">~</span>body, animals)</span>
+<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a><span class="fu">summary</span>(model2)</span>
+<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a><span class="co">#&gt; Call:</span></span>
+<span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a><span class="co">#&gt; lm(formula = brain ~ body, data = animals)</span></span>
+<span id="cb3-7"><a href="#cb3-7" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb3-8"><a href="#cb3-8" tabindex="-1"></a><span class="co">#&gt; Residuals:</span></span>
+<span id="cb3-9"><a href="#cb3-9" tabindex="-1"></a><span class="co">#&gt;    Min     1Q Median     3Q    Max </span></span>
+<span id="cb3-10"><a href="#cb3-10" tabindex="-1"></a><span class="co">#&gt; -576.0 -554.1 -438.1 -156.3 5138.5 </span></span>
+<span id="cb3-11"><a href="#cb3-11" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb3-12"><a href="#cb3-12" tabindex="-1"></a><span class="co">#&gt; Coefficients:</span></span>
+<span id="cb3-13"><a href="#cb3-13" tabindex="-1"></a><span class="co">#&gt;               Estimate Std. Error t value Pr(&gt;|t|)  </span></span>
+<span id="cb3-14"><a href="#cb3-14" tabindex="-1"></a><span class="co">#&gt; (Intercept)  5.764e+02  2.659e+02   2.168   0.0395 *</span></span>
+<span id="cb3-15"><a href="#cb3-15" tabindex="-1"></a><span class="co">#&gt; body        -4.326e-04  1.589e-02  -0.027   0.9785  </span></span>
+<span id="cb3-16"><a href="#cb3-16" tabindex="-1"></a><span class="co">#&gt; ---</span></span>
+<span id="cb3-17"><a href="#cb3-17" tabindex="-1"></a><span class="co">#&gt; Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</span></span>
+<span id="cb3-18"><a href="#cb3-18" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb3-19"><a href="#cb3-19" tabindex="-1"></a><span class="co">#&gt; Residual standard error: 1360 on 26 degrees of freedom</span></span>
+<span id="cb3-20"><a href="#cb3-20" tabindex="-1"></a><span class="co">#&gt; Multiple R-squared:  2.853e-05,  Adjusted R-squared:  -0.03843 </span></span>
+<span id="cb3-21"><a href="#cb3-21" tabindex="-1"></a><span class="co">#&gt; F-statistic: 0.0007417 on 1 and 26 DF,  p-value: 0.9785</span></span></code></pre></div>
+<div style="border: 1px dashed gray;
+padding: 15px 15px 5px 15px;
+background-color: #F7F7F7;">
+<p><small><b>Reproducibility Checks</b><br></p>
+<ul>
+<li><p>✅animals: REPRODUCTION SUCCESSFUL</p></li>
+<li><p>✅model2: REPRODUCTION SUCCESSFUL</p></li>
+</ul>
+</small>
+</div>
+<p><br><br></p>
+</div>
+<div id="random-numbers" class="section level1">
+<h1>Random Numbers</h1>
+<p>The following chunk contains some fixed numbers and numbers that are
+randomly drawn without setting a seed. Because the random numbers change
+from run to run, the chunk mixes reproducible and non-reproducible
+behaviour and serves as an example of how such situations are
+reported.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a>fixed_numbers <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">10</span></span>
+<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a>numbers <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="dv">10</span>, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">1</span>)</span></code></pre></div>
+<div style="border: 1px dashed gray;
+padding: 15px 15px 5px 15px;
+background-color: #F7F7F7;">
+<p><small><b>Reproducibility Checks</b><br></p>
+<ul>
+<li><p>❌.Random.seed: <strong>REPRODUCTION FAILED</strong> Fingerprints
+are not identical.</p></li>
+<li><p>✅fixed_numbers: REPRODUCTION SUCCESSFUL</p></li>
+<li><p>❌numbers: <strong>REPRODUCTION FAILED</strong> Fingerprints are
+not identical.</p></li>
+</ul>
+</small>
+</div>
+<p><br><br></p>
+</div>
+<div id="report" class="section level1">
+<h1>Report</h1>
+<p>After the chunks above have been executed,
+<code>reproducibleRchunks</code> stores metadata about all created
+variables. The following code demonstrates how to extract and summarise
+this information. We start by counting the total number of variables
+that did not reproduce correctly:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a>num_errors <span class="ot">&lt;-</span> reproducibleRchunks<span class="sc">::</span><span class="fu">get_num_reproducibility_errors</span>()</span>
+<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a> <span class="fu">ifelse</span>(num_errors <span class="sc">&gt;</span> <span class="dv">0</span>,<span class="st">&quot;There were some results that did not reproduce!&quot;</span>,<span class="st">&quot;The entire document reproduced succesfully&quot;</span>)</span>
+<span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a><span class="co">#&gt; [1] &quot;There were some results that did not reproduce!&quot;</span></span></code></pre></div>
+<p>The second function <code>get_reproducibility_summary()</code>
+generates a table that can either be used to inspect details about the
+reproduction status of each variable in each chunk, or to compute
+further summaries from. First, we obtain the table:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a>repro_table <span class="ot">&lt;-</span> reproducibleRchunks<span class="sc">::</span><span class="fu">get_reproducibility_summary</span>()</span>
+<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(repro_table)</span></code></pre></div>
+<table>
+<thead>
+<tr class="header">
+<th align="left">Chunk</th>
+<th align="left">Variable</th>
+<th align="left">Success</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">cereal</td>
+<td align="left">cereal_data</td>
+<td align="left">TRUE</td>
+</tr>
+<tr class="even">
+<td align="left">cereal</td>
+<td align="left">model</td>
+<td align="left">TRUE</td>
+</tr>
+<tr class="odd">
+<td align="left">lm</td>
+<td align="left">animals</td>
+<td align="left">TRUE</td>
+</tr>
+<tr class="even">
+<td align="left">lm</td>
+<td align="left">model2</td>
+<td align="left">TRUE</td>
+</tr>
+<tr class="odd">
+<td align="left">random</td>
+<td align="left">.Random.seed</td>
+<td align="left">FALSE</td>
+</tr>
+<tr class="even">
+<td align="left">random</td>
+<td align="left">fixed_numbers</td>
+<td align="left">TRUE</td>
+</tr>
+<tr class="odd">
+<td align="left">random</td>
+<td align="left">numbers</td>
+<td align="left">FALSE</td>
+</tr>
+</tbody>
+</table>
+<p>Next, we summarise the table by chunk and create a bar plot that
+visualises the proportion of successful reproductions.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a><span class="cf">if</span> (<span class="fu">nrow</span>(repro_table) <span class="sc">&gt;</span> <span class="dv">0</span>) {</span>
+<span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a>  prop_success <span class="ot">&lt;-</span> <span class="fu">aggregate</span>(Success <span class="sc">~</span> Chunk, <span class="at">data =</span> repro_table, <span class="at">FUN =</span> mean)</span>
+<span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a>  </span>
+<span id="cb7-4"><a href="#cb7-4" tabindex="-1"></a>  <span class="fu">barplot</span>(prop_success<span class="sc">$</span>Success,</span>
+<span id="cb7-5"><a href="#cb7-5" tabindex="-1"></a>          <span class="at">names.arg =</span> prop_success<span class="sc">$</span>Chunk,</span>
+<span id="cb7-6"><a href="#cb7-6" tabindex="-1"></a>          <span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>),</span>
+<span id="cb7-7"><a href="#cb7-7" tabindex="-1"></a>          <span class="at">ylab =</span> <span class="st">&quot;Relative Proportion&quot;</span>,</span>
+<span id="cb7-8"><a href="#cb7-8" tabindex="-1"></a>          <span class="at">xlab =</span> <span class="st">&quot;Chunk&quot;</span>,</span>
+<span id="cb7-9"><a href="#cb7-9" tabindex="-1"></a>          <span class="at">main =</span> <span class="st">&quot;Proportion of Successful Reproductions per Chunk&quot;</span>)</span>
+<span id="cb7-10"><a href="#cb7-10" tabindex="-1"></a>} <span class="cf">else</span> {</span>
+<span id="cb7-11"><a href="#cb7-11" tabindex="-1"></a>  <span class="fu">print</span>(<span class="st">&quot;No reproducibility information available yet.&quot;</span>)</span>
+<span id="cb7-12"><a href="#cb7-12" tabindex="-1"></a>}</span></code></pre></div>
+<p><img src="data:image/png;base64,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" /><!-- --></p>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

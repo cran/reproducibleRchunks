@@ -10,9 +10,11 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 
+<meta name="author" content="Andreas Brandmaier" />
 
+<meta name="date" content="2025-07-23" />
 
-<title>Use Case: A Simulation Study using Random Numbers</title>
+<title>Plots</title>
 
 <script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
 // be compatible with the behavior of Pandoc < 2.8).
@@ -336,63 +338,45 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 
 
-<h1 class="title toc-ignore">Use Case: A Simulation Study using Random
-Numbers</h1>
+<h1 class="title toc-ignore">Plots</h1>
+<h4 class="author">Andreas Brandmaier</h4>
+<h4 class="date">2025-07-23</h4>
 
 
 
-<p>This vignette illustrates a typical use-case in which the package
-helps to discover a cause for non-reproducibility in a simulation
-study.</p>
-<div id="simulate-data" class="section level1">
-<h1>Simulate Data</h1>
-<p>First, we generate conditions for a simulation. These vary a sample
-size and a true correlation <code>rho</code>. Second, we define a
-function that simulates data for two normally-distributed variables for
-a given simulation condition, and returns an estimate of the Pearson
-correlation of the two variables:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a>conditions <span class="ot">&lt;-</span> <span class="fu">expand.grid</span>(<span class="at">N=</span><span class="fu">c</span>(<span class="dv">50</span>,<span class="dv">100</span>),<span class="at">rho=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="fl">0.25</span>,<span class="fl">0.5</span>), <span class="at">iter=</span><span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>)</span>
-<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a></span>
-<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a>compute_correlation <span class="ot">&lt;-</span> <span class="cf">function</span>(N, rho, ...) {</span>
-<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a>  N<span class="ot">&lt;-</span><span class="dv">100</span></span>
-<span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a>  r<span class="ot">=</span><span class="dv">0</span></span>
-<span id="cb1-6"><a href="#cb1-6" tabindex="-1"></a>  data <span class="ot">&lt;-</span> MASS<span class="sc">::</span><span class="fu">mvrnorm</span>(<span class="at">n=</span>N, <span class="at">mu=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">0</span>), <span class="at">Sigma=</span><span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">1</span>,r,r,<span class="dv">1</span>),<span class="at">nrow=</span><span class="dv">2</span>))</span>
-<span id="cb1-7"><a href="#cb1-7" tabindex="-1"></a>  <span class="fu">cor</span>(data[,<span class="dv">1</span>],data[,<span class="dv">2</span>])</span>
-<span id="cb1-8"><a href="#cb1-8" tabindex="-1"></a>}</span></code></pre></div>
+<div id="plot" class="section level1">
+<h1>Plot</h1>
+<p>Note that base R plots typically produce graphical output directly to
+the current graphics device, without assigning the result to a variable.
+By design, the <code>reproducibleRchunks</code> package only tracks
+metadata for variables that are explicitly created within each code
+chunk. Since standard plotting commands do not involve variable
+assignment, their output is not checked for reproducibility. See the
+following example, in which only the newly declared variables
+<code>x</code> and <code>y</code> are subject to a reproducibility check
+but not the plot:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="dv">1</span>,<span class="dv">10</span>,.<span class="dv">1</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="fu">sin</span>(x)</span>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a><span class="fu">plot</span>(x,y)</span></code></pre></div>
+<img src="data:image/png;base64,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" /><!-- -->
 <div style="border: 1px dashed gray;
 padding: 15px 15px 5px 15px;
 background-color: #F7F7F7;">
 <p><small><b>Reproducibility Checks</b><br></p>
 <ul>
-<li><p>✅compute_correlation: REPRODUCTION SUCCESSFUL</p></li>
-<li><p>✅conditions: REPRODUCTION SUCCESSFUL</p></li>
+<li><p>✅x: REPRODUCTION SUCCESSFUL</p></li>
+<li><p>✅y: REPRODUCTION SUCCESSFUL</p></li>
 </ul>
 </small>
 </div>
 <p><br><br></p>
-<p>Last, we call the function for every simulation condition to obtain
-the estimates for all simulation conditions.</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a>results <span class="ot">&lt;-</span> <span class="fu">apply</span>(conditions, <span class="dv">1</span>, <span class="cf">function</span>(row) {</span>
-<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a>  <span class="fu">do.call</span>(compute_correlation, <span class="fu">as.list</span>(row))</span>
-<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a>})</span></code></pre></div>
-<div style="border: 1px dashed gray;
-padding: 15px 15px 5px 15px;
-background-color: #F7F7F7;">
-<p><small><b>Reproducibility Checks</b><br></p>
-<ul>
-<li><p>❌.Random.seed: <strong>REPRODUCTION FAILED</strong> Fingerprints
-are not identical.</p></li>
-<li><p>❌results: <strong>REPRODUCTION FAILED</strong> Fingerprints are
-not identical.</p></li>
-</ul>
-</small>
-</div>
-<p><br><br></p>
-<p>Note that the first code chunk reproduces fine while second code
-chunk does not. This is because the simulation did not specify a random
-seed, so the random numbers are different every time the document is
-generated. This is caught by using the <code>reproducibleR</code>
-chunk.</p>
+<p>Note that there is the function <code>recordPlot()</code> which
+records the plot from a graphics device. However the result object
+contains system-specific information such as local paths to R’s,
+internal libraries and the R version used or a process id, which makes
+reproducibility checks on plots of base R futile. Instead, we recommend
+reproducibility checks on the variables that contain the data that is
+plotted.</p>
 </div>
 
 

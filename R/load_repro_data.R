@@ -40,7 +40,7 @@ load_repro_data <-
 
       if (json_meta$hashing_algorithm != default_hashing_algorithm())
       {
-        stop("Hashing algorithm mismatch between Markdown and JSON file!")
+        stop("Hashing algorithm mismatch between Markdown and JSON file! JSON stores ",json_meta$hashing_algorithm, " and current setting is ",default_hashing_algorithm())
       }
       if (json_meta$hashing_package != "digest") {
         stop("Unsupported R package for hashing in JSON file!")
@@ -48,8 +48,6 @@ load_repro_data <-
       if (json_meta$hashing != default_hashing()) {
         stop("Hashing vs. raw data mismatch between Markdown and JSON file!")
       }
-
-      # TODO    if (json$hashing_package_version != ...) {}
 
       for (i in 1:length(json_lst)) {
         var_name <- names(json_lst)[i]
